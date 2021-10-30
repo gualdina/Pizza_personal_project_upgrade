@@ -1,20 +1,15 @@
-package com.pizzashop.Pizza.Services;
+package com.pizzashop.Pizza.service;
 
-import com.pizzashop.Pizza.Controllers.Requests.CustomerRQ;
-import com.pizzashop.Pizza.Models.Customer;
-import com.pizzashop.Pizza.Repositories.CustomerRepository;
-import com.pizzashop.Pizza.exceptions.CityNotSupportedException;
+import com.pizzashop.Pizza.controller.request.CustomerRQ;
 import com.pizzashop.Pizza.exceptions.CustomerNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pizzashop.Pizza.model.Customer;
+import com.pizzashop.Pizza.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service//Created for the detailed logic of the controller
 public class CustomerService {
-
-
-
     private final CustomerRepository customerRepository;
 
     public CustomerService(CustomerRepository customerRepository) {

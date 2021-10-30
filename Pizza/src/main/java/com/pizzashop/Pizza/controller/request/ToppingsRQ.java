@@ -1,13 +1,11 @@
-package com.pizzashop.Pizza.Controllers.Requests;
+package com.pizzashop.Pizza.controller.request;
 
 import lombok.*;
 
-@Getter
-@Setter
-@ToString
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Getter
 public class ToppingsRQ {
     private String sauce;
     public String toppingName;

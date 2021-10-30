@@ -1,12 +1,16 @@
-package com.pizzashop.Pizza.Controllers;
+package com.pizzashop.Pizza.controller;
 
-import com.pizzashop.Pizza.Controllers.Requests.OrderDeliveryRQ;
-import com.pizzashop.Pizza.Models.OrderDelivery;
-import com.pizzashop.Pizza.Services.OrderDeliveryService;
+import com.pizzashop.Pizza.controller.request.OrderDeliveryRQ;
+import com.pizzashop.Pizza.model.OrderDelivery;
+import com.pizzashop.Pizza.controller.response.OrderDeliveryResponse;
+import com.pizzashop.Pizza.service.OrderDeliveryService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.ArrayList;
+
 
 @RestController
 @RequestMapping("/api")
@@ -17,13 +21,18 @@ public class OrderDeliveryController {
     public OrderDeliveryController(OrderDeliveryService orderDeliveryService) {
         this.orderDeliveryService = orderDeliveryService;
     }
+    //get order delivery  by id
     @GetMapping("/OrderDelivery/{id}")
-    public OrderDelivery getOrderDeliveryById(@PathVariable Long id){
-        return orderDeliveryService.getOrderDeliveryById(id);
+    public OrderDeliveryResponse getOrderDeliveryById(@PathVariable(value = "id") Long id){
+        OrderDelivery orderDelivery = orderDeliveryService.getOrderDeliveryById(id);
+        List<PizzaResponse> pizzaResponse= new ArrayList<>();
+        OrderDeliveryResponse orderDeliveryResponse = new OrderDeliveryResponse(orderDelivery.getId(),
+                orderDelivery.getName(),
+                pizzaResponses);
     }
     @PostMapping(value = "/OrderDelivery", consumes = "application/json")
-    public OrderDelivery saveOrder(@RequestBody @Valid OrderDeliveryRQ orderDeliveryRQ){
-        return orderDeliveryService.saveOrder(orderDeliveryRQ);
+    public ResponseEntity<OrderDeliveryResponse> saveOrder(@RequestBody OrderDeliveryRQ orderDeliveryRQ){
+        return ResponseEntity.ok(orderDeliveryService.saveOrder(orderDeliveryRQ));
     }
     @PostMapping(value = "/Pizza-OrderDelivery", consumes = "application/json")
     public OrderDelivery addPizzaToOrder(@RequestBody @Valid Long  orderDeliveryId, Long pizzaId){

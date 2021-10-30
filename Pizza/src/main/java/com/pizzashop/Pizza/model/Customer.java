@@ -1,8 +1,9 @@
-package com.pizzashop.Pizza.Models;
+package com.pizzashop.Pizza.model;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "customer")
+@Table
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +22,6 @@ public class Customer {
     private int phoneNumber;
     private String city;
     private String address;
-    @ManyToOne//to connect customer to order
-    @JoinColumn(name = "orderDelivery_Id")
-    private OrderDelivery orderDelivery;
+    @OneToMany(mappedBy = "customers")//to connect customer to order
+    private List<OrderDelivery> orderToDelivery;
 }

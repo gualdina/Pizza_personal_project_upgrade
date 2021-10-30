@@ -1,53 +1,44 @@
-package com.pizzashop.Pizza.Services;
+package com.pizzashop.Pizza.service;
 
-import com.pizzashop.Pizza.Controllers.Requests.OrderDeliveryRQ;
-import com.pizzashop.Pizza.Models.Customer;
-import com.pizzashop.Pizza.Models.OrderDelivery;
-import com.pizzashop.Pizza.Models.Pizza;
-import com.pizzashop.Pizza.Repositories.OrderDeliveryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pizzashop.Pizza.model.OrderDelivery;
+import com.pizzashop.Pizza.model.Pizza;
+import com.pizzashop.Pizza.repository.OrderDeliveryRepository;
+import com.pizzashop.Pizza.repository.PizzaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Service//Created for the detailed logic of the controller
 public class OrderDeliveryService {
 
     //Connection to the repository and to the pizza service
     private final OrderDeliveryRepository orderDeliveryRepository;
-    private final PizzaService pizzaService;
+    private final PizzaRepository pizzaRepository;
 
-    public OrderDeliveryService(OrderDeliveryRepository orderDeliveryRepository, PizzaService pizzaService) {
+    public OrderDeliveryService(OrderDeliveryRepository orderDeliveryRepository, PizzaRepository pizzaRepository) {
         this.orderDeliveryRepository = orderDeliveryRepository;
-        this.pizzaService = pizzaService;
+        this.pizzaRepository = pizzaRepository;
     }
     public OrderDelivery getOrderDeliveryById(Long id){
-
         return orderDeliveryRepository.getById(id);
     }
-    public OrderDelivery deleteOrderDelivery(Long id){
-        OrderDelivery orderDelivery = getOrderDeliveryById(id);
-        orderDeliveryRepository.delete(orderDelivery);
-        return orderDelivery;
+    public void deleteOrderDelivery(Long id){
+        orderDeliveryRepository.deleteById(id);
     }
-    public OrderDelivery saveOrder(OrderDeliveryRQ orderDeliveryRQ) {
-        String name = orderDeliveryRQ.getName();
-        OrderDelivery orderDelivery = OrderDelivery
-                .builder()
-                .name(name)
-                .build();
-        return orderDeliveryRepository.save(orderDelivery);
+    public OrderDelivery addOrder(OrderDelivery newOrder) {
+        return orderDeliveryRepository.save(newOrder);
     }
-    public OrderDelivery addPizzaToOrder(Long orderDeliveryId, Long pizzaId){
-        OrderDelivery orderDelivery = getOrderDeliveryById(orderDeliveryId);
-        Pizza pizza = pizzaService.getPizzaById(pizzaId);
-        orderDelivery.addingPizzas(pizza);
-        return orderDelivery;
-    }
-    public OrderDelivery removePizzaFromOrder(Long orderDeliveryId, Long pizzaId){
-        OrderDelivery orderDelivery = getOrderDeliveryById(orderDeliveryId);
-        Pizza pizza = pizzaService.getPizzaById(pizzaId);
-        orderDelivery.removingPizzas(pizza);
+    public OrderDelivery addPizzaToOrder(List<Pizza> pizzaList, Long id){
+        OrderDelivery orderDelivery = this.getOrderDeliveryById(id);
+        List<OrderDelivery> orderDeliveries = new ArrayList<>();
+        orderDeliveries.add(orderDelivery);
+        orderDelivery.setAddedPizzas(pizzaList);
+        for (Pizza pizzas: pizzaList){
+            pizzas.setCreationOfOrder(orderDeliveries)
+            pizzaRepository.save(pizzas);
+        }
         return orderDelivery;
     }
 

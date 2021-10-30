@@ -1,12 +1,17 @@
-package com.pizzashop.Pizza.Controllers;
+package com.pizzashop.Pizza.controller;
 
-import com.pizzashop.Pizza.Controllers.Requests.PizzaRQ;
-import com.pizzashop.Pizza.Models.Pizza;
-import com.pizzashop.Pizza.Services.PizzaService;
+import com.pizzashop.Pizza.controller.request.PizzaRQ;
+import com.pizzashop.Pizza.controller.request.ToppingsRQ;
+import com.pizzashop.Pizza.controller.response.PizzaResponse;
+import com.pizzashop.Pizza.controller.response.ToppingsResponse;
+import com.pizzashop.Pizza.model.Pizza;
+import com.pizzashop.Pizza.model.Toppings;
+import com.pizzashop.Pizza.service.PizzaService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,25 +28,81 @@ public class PizzaController {
     public List<Pizza> getPizzas(){
         return pizzaService.getPizzas();
     }
+    //get pizza by id
     @GetMapping("/Pizza/{Id}")
-    public Pizza getPizzaById(@PathVariable Long id){
-        return pizzaService.getPizzaById(id);
+    public PizzaResponse getPizzaById(@PathVariable(value = "id") Long id){
+        Pizza pizza = pizzaService.getPizzaById(id);
+        List<ToppingsResponse> toppingsResp = new ArrayList<>();
+        PizzaResponse pizzaResponse = new PizzaResponse(pizza.getId(),
+                pizza.getType(),
+                pizza.getName(),
+                pizza.getSize(),
+                pizza.getQuantity(), toppingsResp);
+        for (Toppings toppings : pizza.getCompletingTopping()) {
+            ToppingsResponse toppingResp = new ToppingsResponse(
+                    toppings.getId(),
+                    toppings.getSauce(),
+                    toppings.getToppingName());
+            pizzaResponse.getToppingsResponses().add(toppingResp);
+        }
+        return pizzaResponse;
     }
-    @PostMapping(value = "/createPizza", consumes = "application/json")
-    public Pizza addPizza(@RequestBody @Valid PizzaRQ pizzaRQ){
-        return pizzaService.addPizza(pizzaRQ);
+    @PostMapping(value = "/create-Pizza", consumes = "application/json")
+    public PizzaResponse addPizza(@RequestBody @Valid PizzaRQ pizzaRQ){
+        Pizza newPizza = Pizza
+                .builder()
+                .name(pizzaRQ.getName())
+                .type(pizzaRQ.getType())
+                .size(pizzaRQ.getSize())
+                .quantity(pizzaRQ.getQuantity())
+                .build();
+        pizzaService.addPizza(newPizza);
+        PizzaResponse pizzaResponse = new PizzaResponse();
+        pizzaResponse.setId(newPizza.getId());
+        pizzaResponse.setName(newPizza.getName());
+        pizzaResponse.setType(newPizza.getType());
+        pizzaResponse.setSize(newPizza.getSize());
+        pizzaResponse.setQuantity(newPizza.getQuantity());
+        return pizzaResponse;
     }
-    @PostMapping(value = "/addingToppingsPizzas", consumes = "application/json")
-    public Pizza addToppingsToPizza(@RequestBody @Valid Long pizzaId, Long toppingsId){
-        return pizzaService.addToppingsToPizza(pizzaId, toppingsId);
+    //add toppings to pizza
+    @PostMapping(value = "/Adding-Toppings-Pizzas/{id}")
+    public PizzaResponse addToppingsToPizza(@RequestBody List<ToppingsRQ> toppingsRQS, Long id){
+        List<Toppings> toppings = new ArrayList<>();
+        for (ToppingsRQ toppingsRQ : toppingsRQS) {
+            toppings.add(Toppings
+                    .builder()
+                    .sauce(toppingsRQ.getSauce())
+                    .toppingName(toppingsRQ.getToppingName())
+                    .build());
+        }
+        Pizza pizza = pizzaService.addToppingsToPizza(toppings,id);
+        List<ToppingsResponse> toppingsResponses = new ArrayList<>();
+        PizzaResponse pizzaResponse = new PizzaResponse(pizza.getId(),
+        pizza.getType(),
+                pizza.getName(),
+                pizza.getSize(),
+                pizza.getQuantity(), toppingsResponses);
+        for (Toppings topping : pizza.getCompletingTopping()) {
+            ToppingsResponse toppingResp = new ToppingsResponse(
+                    topping.getId(),
+                    topping.getSauce(),
+                    topping.getToppingName());
+            pizzaResponse.getToppingsResponses().add(toppingResp);
+        }
+        return pizzaResponse;
+
     }
-    @PutMapping("Pizza/{id}")
-    public void updatePizza(@PathVariable Long id,@RequestBody @Valid PizzaRQ pizzaToUpdate){
-        pizzaService.updatePizza(id, pizzaToUpdate);
-    }
-    @DeleteMapping("/Pizza-Toppings/{id}")
-    public void removeToppingsFromPizza(@PathVariable Long pizzaId, Long toppingsId){
-        pizzaService.removeToppingsFromPizza(pizzaId, toppingsId);
+    @PutMapping(value = "/Pizza/{id}")
+    public PizzaResponse updatePizza(@PathVariable(value = "id") Long id, @RequestBody PizzaRQ pizzaRQ){
+        Pizza pizza = pizzaService.updatePizza(id, pizzaRQ);
+        PizzaResponse pizzaResponse = new PizzaResponse();
+        pizzaResponse.setId(pizza.getId());
+        pizzaResponse.setName(pizza.getName());
+        pizzaResponse.setType(pizza.getType());
+        pizzaResponse.setSize(pizza.getSize());
+        pizzaResponse.setQuantity(pizza.getQuantity());
+        return pizzaResponse;
     }
     @DeleteMapping("/Pizza/{id}")
     public void deletePizza(@PathVariable Long id){

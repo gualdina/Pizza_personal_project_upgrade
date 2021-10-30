@@ -1,6 +1,6 @@
-package com.pizzashop.Pizza.Repositories;
+package com.pizzashop.Pizza.repository;
 
-import com.pizzashop.Pizza.Models.Customer;
+import com.pizzashop.Pizza.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

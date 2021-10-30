@@ -1,4 +1,4 @@
-package com.pizzashop.Pizza.Controllers.Requests;
+package com.pizzashop.Pizza.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.pizzashop.Pizza.Controllers.Requests;
+package com.pizzashop.Pizza.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CustomerRQ {
+    private Long id;
     private String firstName;
     private String lastName;
     private int phoneNumber;

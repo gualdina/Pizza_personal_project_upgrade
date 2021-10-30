@@ -1,4 +1,4 @@
-package com.pizzashop.Pizza.Models;
+package com.pizzashop.Pizza.model;
 
 import lombok.*;
 
@@ -29,19 +29,10 @@ public class Pizza {
     @Max(value = 9)
     private int quantity;
     @ManyToMany(mappedBy = "addedPizzas")//created to complete/create the order
-    private List<OrderDelivery> creationOfOrder = new ArrayList<>();
+    private List<OrderDelivery> creationOfOrder;
     @ManyToMany//created to complete pizza with toppings
     @JoinTable( name ="pizza_toppings_mapping",
-            joinColumns = { @JoinColumn(name = "pizza_id" ) },
-            inverseJoinColumns = { @JoinColumn(name = "toppings_id") }
-    )
-    private List<Toppings> completingTopping = new ArrayList<>();
-
-    public void removingToppings(Toppings toppings) {
-        completingTopping.remove(toppings);
-    }
-
-    public void addingToppings(Toppings toppings) {
-        completingTopping.add(toppings);
-    }
+            joinColumns = { @JoinColumn(name = "pizza_id", referencedColumnName = "id" )},
+            inverseJoinColumns = { @JoinColumn(name = "toppings_id",referencedColumnName = "id")})
+   List<Toppings> completingTopping = new ArrayList<Toppings>() ;
 }

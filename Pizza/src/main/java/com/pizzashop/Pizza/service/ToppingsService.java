@@ -1,9 +1,8 @@
-package com.pizzashop.Pizza.Services;
+package com.pizzashop.Pizza.service;
 
-import com.pizzashop.Pizza.Controllers.Requests.ToppingsRQ;
-import com.pizzashop.Pizza.Models.Toppings;
-import com.pizzashop.Pizza.Repositories.ToppingsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pizzashop.Pizza.controller.request.ToppingsRQ;
+import com.pizzashop.Pizza.model.Toppings;
+import com.pizzashop.Pizza.repository.ToppingsRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

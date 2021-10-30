@@ -1,6 +1,6 @@
-package com.pizzashop.Pizza.Controllers.Requests;
+package com.pizzashop.Pizza.controller.request;
 
-import com.pizzashop.Pizza.Models.PizzaType;
+import com.pizzashop.Pizza.model.PizzaType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +15,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @Getter
 public class PizzaRQ {
+    private Long id;
     @Enumerated
     private PizzaType type;
     @Column(unique = true)

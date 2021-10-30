@@ -1,4 +1,4 @@
-package com.pizzashop.Pizza.Models;
+package com.pizzashop.Pizza.model;
 
 import lombok.*;
 
@@ -21,5 +21,5 @@ public class Toppings {
     private String sauce;
     public String toppingName;
     @ManyToMany(mappedBy = "completingTopping")//created to create pizza with the toppings selected
-    private List<Pizza> completePizza = new ArrayList<>();
+    private List<Pizza> completePizza = new ArrayList<Pizza>();
 }

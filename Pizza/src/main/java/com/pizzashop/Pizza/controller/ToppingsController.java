@@ -1,8 +1,8 @@
-package com.pizzashop.Pizza.Controllers;
+package com.pizzashop.Pizza.controller;
 
-import com.pizzashop.Pizza.Controllers.Requests.ToppingsRQ;
-import com.pizzashop.Pizza.Models.Toppings;
-import com.pizzashop.Pizza.Services.ToppingsService;
+import com.pizzashop.Pizza.controller.request.ToppingsRQ;
+import com.pizzashop.Pizza.model.Toppings;
+import com.pizzashop.Pizza.service.ToppingsService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
