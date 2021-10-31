@@ -4,7 +4,6 @@ import com.pizzashop.Pizza.model.PizzaType;
 import lombok.*;
 
 import java.util.List;
-
 @Getter
 @Setter
 @Builder

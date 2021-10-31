@@ -1,46 +1,77 @@
 package com.pizzashop.Pizza.controller;
 
 import com.pizzashop.Pizza.controller.request.OrderDeliveryRQ;
-import com.pizzashop.Pizza.model.OrderDelivery;
+import com.pizzashop.Pizza.controller.request.PizzaRQ;
 import com.pizzashop.Pizza.controller.response.OrderDeliveryResponse;
+import com.pizzashop.Pizza.controller.response.PizzaResponse;
+import com.pizzashop.Pizza.model.OrderDelivery;
+import com.pizzashop.Pizza.model.Pizza;
 import com.pizzashop.Pizza.service.OrderDeliveryService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/api")
-@Validated
 public class OrderDeliveryController {
     private final OrderDeliveryService orderDeliveryService;
 
     public OrderDeliveryController(OrderDeliveryService orderDeliveryService) {
         this.orderDeliveryService = orderDeliveryService;
     }
-    //get order delivery  by id
+    //get order delivery by id
     @GetMapping("/OrderDelivery/{id}")
-    public OrderDeliveryResponse getOrderDeliveryById(@PathVariable(value = "id") Long id){
+    public OrderDeliveryResponse getOrderDeliveryById(@PathVariable(value = "id") Long id) {
         OrderDelivery orderDelivery = orderDeliveryService.getOrderDeliveryById(id);
-        List<PizzaResponse> pizzaResponse= new ArrayList<>();
+        List<PizzaResponse> pizzaResponse = new ArrayList<>();
         OrderDeliveryResponse orderDeliveryResponse = new OrderDeliveryResponse(orderDelivery.getId(),
                 orderDelivery.getName(),
-                pizzaResponses);
+                pizzaResponse);
+        return orderDeliveryResponse;
     }
-    @PostMapping(value = "/OrderDelivery", consumes = "application/json")
-    public ResponseEntity<OrderDeliveryResponse> saveOrder(@RequestBody OrderDeliveryRQ orderDeliveryRQ){
-        return ResponseEntity.ok(orderDeliveryService.saveOrder(orderDeliveryRQ));
+
+    @PostMapping(value = "/OrderDelivery")
+    public OrderDeliveryResponse addOrder(@RequestBody OrderDeliveryRQ orderDeliveryRQ){
+        OrderDelivery newOrderDelivery = OrderDelivery
+                .builder()
+                .name(orderDeliveryRQ.getName())
+                .build();
+        orderDeliveryService.addOrder(newOrderDelivery);
+        OrderDeliveryResponse orderDeliveryResponse = new OrderDeliveryResponse();
+        orderDeliveryResponse.setId(newOrderDelivery.getId());
+        orderDeliveryResponse.setName(newOrderDelivery.getName());
+        return orderDeliveryResponse;
     }
-    @PostMapping(value = "/Pizza-OrderDelivery", consumes = "application/json")
-    public OrderDelivery addPizzaToOrder(@RequestBody @Valid Long  orderDeliveryId, Long pizzaId){
-        return orderDeliveryService.addPizzaToOrder(orderDeliveryId, pizzaId);
-    }
-    @DeleteMapping("/Pizza-OrderDelivery")
-    public void removePizzaFromOrder(@PathVariable Long orderDeliveryId, Long pizzaId){
-        orderDeliveryService.removePizzaFromOrder(orderDeliveryId, pizzaId);
+    //add pizzas to order
+    @PostMapping(value = "/Pizza-OrderDelivery")
+    public OrderDeliveryResponse addPizzaToOrder(@RequestBody List<PizzaRQ>  pizzaRQS, Long id){
+            List<Pizza> pizza =  new ArrayList<>();
+             for (PizzaRQ pizzaRQ : pizzaRQS) {pizza.add(Pizza
+                     .builder()
+                     .type(pizzaRQ.getType())
+                     .name(pizzaRQ.getName())
+                     .size(pizzaRQ.getSize())
+                     .quantity(pizzaRQ.getQuantity())
+                     .build());
+             }
+        OrderDelivery orderDelivery = orderDeliveryService.addPizzaToOrder(pizza,id);
+        List<PizzaResponse> pizzaResponses = new ArrayList<>();
+        OrderDeliveryResponse orderDeliveryResponse = new OrderDeliveryResponse(
+                orderDelivery.getId(),
+                orderDelivery.getName(),pizzaResponses);
+        for(Pizza pizzas1 : orderDelivery.getAddedPizzas()){
+            PizzaResponse pizzaResp = PizzaResponse.builder()
+                    .id(pizzas1.getId())
+                    .type(pizzas1.getType())
+                    .name(pizzas1.getName())
+                    .size(pizzas1.getSize())
+                    .quantity(pizzas1.getQuantity())
+                    .build();
+            orderDeliveryResponse.getPizzaResponses().add(pizzaResp);
+        }
+        return orderDeliveryResponse;
     }
     @DeleteMapping("/OrderDelivery/{id}")
     public void deleteOrderDelivery(@PathVariable Long id){

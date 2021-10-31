@@ -36,7 +36,7 @@ public class OrderDeliveryService {
         orderDeliveries.add(orderDelivery);
         orderDelivery.setAddedPizzas(pizzaList);
         for (Pizza pizzas: pizzaList){
-            pizzas.setCreationOfOrder(orderDeliveries)
+            pizzas.setCreatingOrder(orderDeliveries);
             pizzaRepository.save(pizzas);
         }
         return orderDelivery;

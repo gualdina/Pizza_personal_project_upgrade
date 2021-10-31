@@ -2,6 +2,8 @@ package com.pizzashop.Pizza.controller.response;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -14,5 +16,5 @@ public class CustomerResponse {
     private int phoneNumber;
     private String city;
     private String address;
-    private OrderDeliveryResponse orderDeliveryResponse;
+    private List<OrderDeliveryResponse> orderDeliveryResponse;
 }

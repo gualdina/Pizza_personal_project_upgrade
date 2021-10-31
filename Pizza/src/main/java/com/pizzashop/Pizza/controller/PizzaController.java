@@ -78,8 +78,9 @@ public class PizzaController {
         }
         Pizza pizza = pizzaService.addToppingsToPizza(toppings,id);
         List<ToppingsResponse> toppingsResponses = new ArrayList<>();
-        PizzaResponse pizzaResponse = new PizzaResponse(pizza.getId(),
-        pizza.getType(),
+        PizzaResponse pizzaResponse = new PizzaResponse(
+                pizza.getId(),
+                pizza.getType(),
                 pizza.getName(),
                 pizza.getSize(),
                 pizza.getQuantity(), toppingsResponses);

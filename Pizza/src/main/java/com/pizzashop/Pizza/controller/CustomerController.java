@@ -6,15 +6,11 @@ import com.pizzashop.Pizza.exceptions.CustomerNotFoundException;
 import com.pizzashop.Pizza.model.Customer;
 import com.pizzashop.Pizza.service.CustomerService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping(value="/api")
-@Validated
 public class CustomerController {
     private final CustomerService customerService;
 
@@ -38,10 +34,16 @@ public class CustomerController {
         return customerService.addCustomer(customerRQ);
     }
     @PutMapping("/Customer/{id}")
-        public ResponseEntity<CustomerResponse> editCustomer(@PathVariable Long id, @RequestBody CustomerRQ customerRQ){
-        final Customer newInfo = customerService.editCustomer(id,customerRQ.getId());
-        final var responseBody = new CustomerResponse(newInfo.getId(), newInfo.getFirstName(), newInfo.getLastName(), newInfo.getPhoneNumber(), newInfo.getCity(), newInfo.getAddress());
-        return ResponseEntity.ok(responseBody);
+        public CustomerResponse editCustomer(@PathVariable(value = "id") Long id, @RequestBody CustomerRQ customerRQ){
+        Customer customer = customerService.editCustomer(id,customerRQ);
+        CustomerResponse customerResponse = new CustomerResponse();
+                customerResponse.setId(customer.getId());
+                customerResponse.setFirstName(customer.getFirstName());
+                customerResponse.setLastName(customer.getLastName());
+                customerResponse.setPhoneNumber(customer.getPhoneNumber());
+                customerResponse.setCity(customer.getCity());
+                customerResponse.setAddress(customer.getAddress());
+        return customerResponse;
     }
     @DeleteMapping("/Customer/{id}")
     public void deleteCustomer(@PathVariable Long id){

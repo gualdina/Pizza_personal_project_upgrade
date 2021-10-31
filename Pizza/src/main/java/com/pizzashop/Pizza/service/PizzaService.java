@@ -32,7 +32,7 @@ public class PizzaService {
     }
     public void deletePizza(Long id){ pizzaRepository.deleteById(id);}
 
-    public Pizza updatePizza(Long id, PizzaRQ pizzaRQ){
+    public Pizza updatePizza(Long id, PizzaRQ pizzaRQ){//do not use requestes in the service bc shoudl not change according to the cst request
         Pizza pizzaToEdit = this.getPizzaById(id);
         pizzaToEdit.setType(pizzaRQ.getType());
         pizzaToEdit.setName(pizzaRQ.getName());

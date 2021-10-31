@@ -29,7 +29,7 @@ public class Pizza {
     @Max(value = 9)
     private int quantity;
     @ManyToMany(mappedBy = "addedPizzas")//created to complete/create the order
-    private List<OrderDelivery> creationOfOrder;
+    private List<OrderDelivery> creatingOrder;
     @ManyToMany//created to complete pizza with toppings
     @JoinTable( name ="pizza_toppings_mapping",
             joinColumns = { @JoinColumn(name = "pizza_id", referencedColumnName = "id" )},

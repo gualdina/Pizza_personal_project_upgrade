@@ -44,7 +44,7 @@ public class CustomerService {
         customerRepository.delete(customer);
         return customer;
     }
-    public Customer editCustomer(Long id, Customer customer){
+    public Customer editCustomer(Long id, CustomerRQ customer){
         Customer customerToEdit = getCustomerById(id);
         customerToEdit.setFirstName(customer.getFirstName());
         customerToEdit.setLastName(customer.getLastName());
